@@ -1,5 +1,6 @@
 package com.example.earthquake
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -14,11 +15,11 @@ class EarthquakeAdapter(private val earthquakesList: Array<String>) :
      * (custom ViewHolder)
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView
+        //val textView: TextView
 
         init {
             // Define click listener for the ViewHolder's View
-            textView = view.findViewById(R.id.textView)
+            //textView = view.findViewById(R.id.textView)
         }
     }
 
@@ -26,7 +27,7 @@ class EarthquakeAdapter(private val earthquakesList: Array<String>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.text_row_item, viewGroup, false)
+            .inflate(R.layout.item_earthquake, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -36,7 +37,7 @@ class EarthquakeAdapter(private val earthquakesList: Array<String>) :
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.textView.text = earthquakesList[position]
+        //viewHolder.textView.text = earthquakesList[position]
     }
 
     // Return the size of your dataset (invoked by the layout manager)
