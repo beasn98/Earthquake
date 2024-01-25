@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -15,11 +16,16 @@ class EarthquakeAdapter(private val earthquakesList: Array<String>) :
      * (custom ViewHolder)
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //val textView: TextView
-
+        val textViewMagnitude: TextView
+        val textViewLocation: TextView
+        val textViewTime: TextView
+        val layout: ConstraintLayout
         init {
             // Define click listener for the ViewHolder's View
-            //textView = view.findViewById(R.id.textView)
+            textViewMagnitude = view.findViewById(R.id.textView_eartquakeItem_magnitude)
+            textViewLocation = view.findViewById(R.id.textView_earthquakeItem_location)
+            textViewTime = view.findViewById(R.id.textView_earthquakeItem_time)
+            layout = view.findViewById(R.id.layout_itemEarthquake)
         }
     }
 
