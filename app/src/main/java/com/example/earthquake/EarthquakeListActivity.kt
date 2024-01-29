@@ -3,6 +3,7 @@ package com.example.earthquake
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.earthquake.databinding.ActivityEarthquakeListBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -13,7 +14,6 @@ import retrofit2.Response
 class EarthquakeListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEarthquakeListBinding
-    private lateinit var earthquakeList: FeatureCollection
     private lateinit var earthquakeAdapter: EarthquakeAdapter
 
     companion object {
@@ -38,23 +38,26 @@ class EarthquakeListActivity : AppCompatActivity() {
                 // don't forget a null check before trying to use the data
                 // response.body() contains the object in the <> after Response
                 Log.d(TAG, "onResponse: ${response.body()}")
+                if (response.body() != null) {
+                    earthquakeAdapter = EarthquakeAdapter(response.body()!!.features)
+                    refresh()
+                }
+                else {
+                    Log.d(TAG, "onResponse: feature is null")
+                }
+
             }
 
             override fun onFailure(call: Call<FeatureCollection>, t: Throwable) {
                 Log.d(TAG, "onFailure: ${t.message}")
             }
         })
-        
 
-        val inputStream = resources.openRawResource(R.raw.earthquakes) //JSON file goes here
-        val jsonString = inputStream.bufferedReader().use {
-            it.readText()
-        }
-        val gson = Gson()
-        val type = object : TypeToken<FeatureCollection>() {}.type // data type of the list.
-        val list = gson.fromJson<FeatureCollection>(jsonString, type)
-        earthquakeList = list
+    }
 
+    fun refresh() {
+        binding.recyclerViewEarthquakeListEarthquake.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewEarthquakeListEarthquake.adapter = earthquakeAdapter
     }
 
 

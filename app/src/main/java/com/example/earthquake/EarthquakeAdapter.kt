@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Date
 
 
-class EarthquakeAdapter(private val earthquakesList: Array<String>) :
+class EarthquakeAdapter(private val earthquakesList: List<Feature>) :
     RecyclerView.Adapter<EarthquakeAdapter.ViewHolder>() {
 
     /**
@@ -43,7 +44,10 @@ class EarthquakeAdapter(private val earthquakesList: Array<String>) :
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        //viewHolder.textView.text = earthquakesList[position]
+        viewHolder.textViewMagnitude.text = String.format("%.2f", earthquakesList[position].properties.mag)
+        viewHolder.textViewLocation.text = earthquakesList[position].properties.place
+        viewHolder.textViewTime.text = Date(earthquakesList[position].properties.time).toString()
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
