@@ -39,7 +39,7 @@ class EarthquakeListActivity : AppCompatActivity() {
                 // response.body() contains the object in the <> after Response
                 Log.d(TAG, "onResponse: ${response.body()}")
                 if (response.body() != null) {
-                    earthquakeAdapter = EarthquakeAdapter(response.body()!!.features)
+                    earthquakeAdapter = EarthquakeAdapter(response.body()!!.features.sorted())
                     refresh()
                 }
                 else {

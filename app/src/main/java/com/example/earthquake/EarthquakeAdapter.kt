@@ -1,5 +1,7 @@
 package com.example.earthquake
 
+import EarthquakeMapActivity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.Date
 
 
-class EarthquakeAdapter(private val earthquakesList: List<Feature>) :
+class EarthquakeAdapter(var earthquakesList: List<Feature>) :
     RecyclerView.Adapter<EarthquakeAdapter.ViewHolder>() {
 
     /**
@@ -28,6 +30,7 @@ class EarthquakeAdapter(private val earthquakesList: List<Feature>) :
             textViewTime = view.findViewById(R.id.textView_earthquakeItem_time)
             layout = view.findViewById(R.id.layout_itemEarthquake)
         }
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -39,14 +42,25 @@ class EarthquakeAdapter(private val earthquakesList: List<Feature>) :
         return ViewHolder(view)
     }
 
+    companion object {
+        val EXTRA_EARTHQUAKE = "earthquake"
+    }
+
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        val context = viewHolder.layout.context
         viewHolder.textViewMagnitude.text = String.format("%.2f", earthquakesList[position].properties.mag)
         viewHolder.textViewLocation.text = earthquakesList[position].properties.place
         viewHolder.textViewTime.text = Date(earthquakesList[position].properties.time).toString()
+
+        viewHolder.layout.setOnClickListener {
+            val earthquakeIntent = Intent(context, EarthquakeMapActivity::class.java)
+            earthquakeIntent.putExtra(EXTRA_EARTHQUAKE, earthquakesList[position])
+            context.startActivity(earthquakeIntent)
+        }
 
     }
 
