@@ -1,20 +1,25 @@
+package com.example.earthquake
+
 import android.os.Bundle
 import android.preference.PreferenceManager
-
+import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.example.earthquake.R
-
 import org.osmdroid.config.Configuration.*
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-
-import java.util.ArrayList
+import org.osmdroid.views.overlay.Marker
 
 class EarthquakeMapActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
     private lateinit var map : MapView
+    
+    companion object {
+        val TAG = "EarthquakeMapActivity"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,15 +36,42 @@ class EarthquakeMapActivity : AppCompatActivity() {
         //tile servers will get you banned based on this string.
 
         //inflate and create the map
+
         setContentView(R.layout.activity_earthquake_map)
+
+
 
         map = findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
 
+        val earthquake = intent.getParcelableExtra<Feature>(EarthquakeAdapter.EXTRA_EARTHQUAKE)
+
+        var location = findViewById<TextView>(R.id.textView_earthquake_location)
+        location.text = earthquake?.properties?.title
+        var link = findViewById<TextView>(R.id.textView_earthquake_link)
+        link.text = earthquake?.properties?.url
+
         val mapController = map.controller
-        mapController.setZoom(9.5)
-        val startPoint = GeoPoint(48.8583, 2.2944);
+        mapController.setZoom(8.5)
+        val x = earthquake?.geometry?.coordinates?.get(0) ?: 48.8583
+        val y = earthquake?.geometry?.coordinates?.get(1) ?: 2.2944
+        Log.d(TAG, "onCreate: $x")
+        Log.d(TAG, "onCreate: $y")
+
+        val startPoint = GeoPoint(y, x);
         mapController.setCenter(startPoint);
+
+        val startMarker = Marker(map)
+        startMarker.title = earthquake?.properties?.place
+        startMarker.position = startPoint
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(startMarker)
+
+
+
+
+
+
     }
 
     override fun onResume() {

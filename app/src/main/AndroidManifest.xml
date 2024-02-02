@@ -18,11 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Earthquake"
         tools:targetApi="31">
-        <activity
-            android:name=".EarthquakeAdapter"
-            android:exported="false" />
-        <activity
-            android:name="EarthquakeMapActivity"/>
+        <activity android:name=".EarthquakeMapActivity"/>
         <activity
             android:name=".EarthquakeListActivity"
             android:exported="true">

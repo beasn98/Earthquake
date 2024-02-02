@@ -1,6 +1,5 @@
 package com.example.earthquake
 
-import EarthquakeMapActivity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
