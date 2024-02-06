@@ -1,8 +1,13 @@
 package com.example.earthquake
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.earthquake.databinding.ActivityEarthquakeListBinding
 import com.google.gson.Gson
@@ -15,6 +20,7 @@ class EarthquakeListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEarthquakeListBinding
     private lateinit var earthquakeAdapter: EarthquakeAdapter
+    private lateinit var earthquakeList: List<Feature>
 
     companion object {
         val TAG = "EarthquakeListActivity"
@@ -24,6 +30,9 @@ class EarthquakeListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEarthquakeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.title = "Earthquake App"
+        supportActionBar?.subtitle = "USGS All Earthquakes, Past Day"
 
         val retrofit = RetrofitHelper.getInstance()
         val earthquakeService = retrofit.create(EarthquakeService::class.java)
@@ -39,7 +48,11 @@ class EarthquakeListActivity : AppCompatActivity() {
                 // response.body() contains the object in the <> after Response
                 Log.d(TAG, "onResponse: ${response.body()}")
                 if (response.body() != null) {
-                    earthquakeAdapter = EarthquakeAdapter(response.body()!!.features.sorted())
+                    earthquakeList = response.body()!!.features.filter { it.properties.mag > 1.0 }
+                    earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedWith(
+                        compareBy<Feature> {-it.properties.mag}
+                            .thenByDescending {it.properties.time}
+                    ))
                     refresh()
                 }
                 else {
@@ -55,6 +68,39 @@ class EarthquakeListActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.earthquakelist_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menuItem_menu_sortMag -> {
+                earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedWith(
+                    compareBy<Feature> {-it.properties.mag}
+                        .thenByDescending {it.properties.time}
+                ))
+                refresh()
+                true
+            }
+            R.id.menuItem_menu_sortRecent -> {
+                earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedBy {-it.properties.time})
+                refresh()
+                true
+            }
+            R.id.menuItem_menu_legend -> {
+                val builder = AlertDialog.Builder(this)
+
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreateDialog(id: Int, args: Bundle?): Dialog? {
+        return super.onCreateDialog(id, args)
+    }
     fun refresh() {
         binding.recyclerViewEarthquakeListEarthquake.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewEarthquakeListEarthquake.adapter = earthquakeAdapter

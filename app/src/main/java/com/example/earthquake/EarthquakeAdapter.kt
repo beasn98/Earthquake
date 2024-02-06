@@ -51,13 +51,39 @@ class EarthquakeAdapter(var earthquakesList: List<Feature>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         val context = viewHolder.layout.context
-        viewHolder.textViewMagnitude.text = String.format("%.2f", earthquakesList[position].properties.mag)
-        viewHolder.textViewLocation.text = earthquakesList[position].properties.place
-        viewHolder.textViewTime.text = Date(earthquakesList[position].properties.time).toString()
+        val earthquake = earthquakesList[position]
+        viewHolder.textViewMagnitude.text = String.format("%.1f", earthquake.properties.mag)
+        viewHolder.textViewLocation.text = earthquake.properties.place
+        viewHolder.textViewTime.text = Date(earthquake.properties.time).toString()
+
+        when (earthquake.properties.mag) {
+            //small
+            in 1.0..2.5 -> {
+                viewHolder.textViewMagnitude.setTextColor(context.resources.getColor(R.color.blue))
+                viewHolder.textViewMagnitude.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
+            }
+            //moderate
+            in 2.51..4.5 -> {
+                viewHolder.textViewMagnitude.setTextColor(context.resources.getColor(R.color.orange))
+                viewHolder.textViewMagnitude.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
+            }
+            //large
+            in 4.51..6.5 -> {
+                viewHolder.textViewMagnitude.setTextColor(context.resources.getColor(R.color.red))
+                viewHolder.textViewMagnitude.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    R.drawable.baseline_warning_24,0,0,0)
+            }
+            //significant
+            else -> {
+                viewHolder.textViewMagnitude.setTextColor(context.resources.getColor(R.color.purple))
+                viewHolder.textViewMagnitude.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    R.drawable.baseline_warning_amber_24,0,0,0)
+            }
+        }
 
         viewHolder.layout.setOnClickListener {
             val earthquakeIntent = Intent(context, EarthquakeMapActivity::class.java)
-            earthquakeIntent.putExtra(EXTRA_EARTHQUAKE, earthquakesList[position])
+            earthquakeIntent.putExtra(EXTRA_EARTHQUAKE, earthquake)
             context.startActivity(earthquakeIntent)
         }
 

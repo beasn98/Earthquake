@@ -5,6 +5,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import org.osmdroid.config.Configuration.*
@@ -16,12 +17,16 @@ import org.osmdroid.views.overlay.Marker
 class EarthquakeMapActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
     private lateinit var map : MapView
+
+
     
     companion object {
         val TAG = "EarthquakeMapActivity"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.hide()
 
         //handle permissions first, before map is created. not depicted here
 
