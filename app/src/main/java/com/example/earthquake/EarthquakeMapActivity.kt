@@ -57,11 +57,9 @@ class EarthquakeMapActivity : AppCompatActivity() {
         link.text = earthquake?.properties?.url
 
         val mapController = map.controller
-        mapController.setZoom(8.5)
+        mapController.setZoom(5.5)
         val x = earthquake?.geometry?.coordinates?.get(0) ?: 48.8583
         val y = earthquake?.geometry?.coordinates?.get(1) ?: 2.2944
-        Log.d(TAG, "onCreate: $x")
-        Log.d(TAG, "onCreate: $y")
 
         val startPoint = GeoPoint(y, x);
         mapController.setCenter(startPoint);
@@ -71,11 +69,6 @@ class EarthquakeMapActivity : AppCompatActivity() {
         startMarker.position = startPoint
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map.overlays.add(startMarker)
-
-
-
-
-
 
     }
 
@@ -113,21 +106,4 @@ class EarthquakeMapActivity : AppCompatActivity() {
         }
     }
 
-
-    /*private fun requestPermissionsIfNecessary(String[] permissions) {
-        val permissionsToRequest = ArrayList<String>();
-        permissions.forEach { permission ->
-        if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            permissionsToRequest.add(permission);
-        }
-    }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }*/
 }

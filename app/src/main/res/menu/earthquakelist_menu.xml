@@ -5,7 +5,8 @@
     <item
         android:id="@+id/menuItem_menu_legend"
         android:icon="@android:drawable/ic_menu_help"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:title="Legend" />
     <item
         android:id="@+id/menuItem_menu_sortRecent"
         android:title="Sort by recent" />

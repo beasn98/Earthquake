@@ -46,14 +46,11 @@ class EarthquakeListActivity : AppCompatActivity() {
                 // this is where you will set up your adapter for recyclerView
                 // don't forget a null check before trying to use the data
                 // response.body() contains the object in the <> after Response
-                Log.d(TAG, "onResponse: ${response.body()}")
                 if (response.body() != null) {
                     earthquakeList = response.body()!!.features.filter { it.properties.mag > 1.0 }
-                    earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedWith(
-                        compareBy<Feature> {-it.properties.mag}
-                            .thenByDescending {it.properties.time}
-                    ))
+                    earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedBy{-it.properties.time})
                     refresh()
+                    Log.d(TAG, "onResponse: $earthquakeList")
                 }
                 else {
                     Log.d(TAG, "onResponse: feature is null")
@@ -79,7 +76,7 @@ class EarthquakeListActivity : AppCompatActivity() {
             R.id.menuItem_menu_sortMag -> {
                 earthquakeAdapter = EarthquakeAdapter(earthquakeList.sortedWith(
                     compareBy<Feature> {-it.properties.mag}
-                        .thenByDescending {it.properties.time}
+                        .thenBy {it.properties.time}
                 ))
                 refresh()
                 true
@@ -91,16 +88,19 @@ class EarthquakeListActivity : AppCompatActivity() {
             }
             R.id.menuItem_menu_legend -> {
                 val builder = AlertDialog.Builder(this)
-
+                builder.setTitle("Earthquake Data")
+                builder.setMessage("Purple: Significant (>6.5)\nRed: Large (4.5-6.5)\nOrange: " +
+                        "Moderate (2.5-4.5)\nBlue: Small (1.0-2.5)\n\nThe number represents " +
+                        "the magnitude of the earthquake.")
+                builder.setPositiveButton(R.string.yes, null)
+                builder.show()
                 true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onCreateDialog(id: Int, args: Bundle?): Dialog? {
-        return super.onCreateDialog(id, args)
-    }
+
     fun refresh() {
         binding.recyclerViewEarthquakeListEarthquake.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewEarthquakeListEarthquake.adapter = earthquakeAdapter
